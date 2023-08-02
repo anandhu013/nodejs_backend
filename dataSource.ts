@@ -14,7 +14,6 @@ const dataSource = new DataSource({
     synchronize: true,
     logging: true,
     namingStrategy: new SnakeNamingStrategy()
-    
 })
 
 export default dataSource;
