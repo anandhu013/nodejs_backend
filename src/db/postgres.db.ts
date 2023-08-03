@@ -1,5 +1,5 @@
 
-import Employee from "./Employee";
+import Employee from "../entity/Employee.entity";
 import { DataSource } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
