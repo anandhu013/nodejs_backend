@@ -1,23 +1,19 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import Address from "./address.entity";
+import Employee from "./Employee.entity";
 
-
-@Entity("employees")
-class Employee{
+@Entity()
+class Address{
     @PrimaryGeneratedColumn()
     id:number;
 
     @Column()
-    name:string;
+    line1:string;
 
     @Column()
-    email:string;
-
-    @Column({nullable:true})
-    age:number;
+    pincode:string;
 
     @CreateDateColumn()
-    createdAt:Date;
+    createAt:Date;
 
     @UpdateDateColumn()
     updatedAt:Date;
@@ -25,8 +21,9 @@ class Employee{
     @DeleteDateColumn()
     deletedAt:Date;
 
-    @OneToOne(() => Address,(address) => address.employee,{cascade:true})
-    address:Address;
+    @OneToOne(() => Employee,(employee) => employee.address)
+    @JoinColumn()
+    employee:Employee
 }
 
-export default Employee;
+export default Address;
