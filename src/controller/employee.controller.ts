@@ -83,9 +83,15 @@ class EmployeeController{
             }
 
 
+            try{
             const employeeId=Number(req.params.id);
             const employee=await this.employeeService.updateAnEmployee(employeeId,req.body.name,req.body.email,req.body.address);
             res.status(200).send(employee);
+            }
+            catch(err)
+            {
+                next(err);
+            }
         }catch(err)
         {
             next(err);

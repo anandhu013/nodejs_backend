@@ -52,6 +52,12 @@ class EmployeeService{
     async updateAnEmployee(id:number,name:string,email:string,address:any):Promise<Employee>
     {
         const employee=await this.employeeRepository.findAnEmployeeById(id);
+
+        if(!employee)
+        {
+            throw new HttpException(404,`Employee not found with ${id}`);
+        }
+
         employee.name=name;
         employee.email=email;
         employee.address.line1=address.line1;
