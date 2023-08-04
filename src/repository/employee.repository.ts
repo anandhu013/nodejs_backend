@@ -28,6 +28,17 @@ class EmployeeRepository{
         });
     }
 
+    findAnEmployeeByEmail(email:string):Promise<Employee>{
+        //const employeeRepository= this.dataSource.getRepository(Employee);
+        return this.employeeRepository.findOne({
+            where:{email:email},
+            relations:{
+                address:true,
+            },
+        });
+    }
+
+
     createAnEmployee(employee:Employee):Promise<Employee>{
         return this.employeeRepository.save(employee);
     }

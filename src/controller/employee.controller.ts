@@ -1,10 +1,13 @@
-import express, { NextFunction } from "express"
+import express, { NextFunction, Request, Response } from "express"
 import EmployeeService from "../service/employee.service";
 import Employee from "../entity/Employee.entity";
 import { plainToInstance } from "class-transformer";
 import CreateEmployeeDto from "../dto/create-employee.dto";
 import { validate } from "class-validator";
 import ValidationException from "../exception/validation.exception";
+import UpdateEmployeeDto from "../dto/update-employee.dto";
+import authenticate from "../middleware/authenticate.middleware";
+import authorize from "../middleware/authorize.middleware";
 
 class EmployeeController{
     public router:express.Router;
@@ -15,11 +18,12 @@ class EmployeeController{
         this.router=express.Router();
         //this.employeeService=new EmployeeService();
 
-        this.router.get("/",this.getAllEmployees);
+        this.router.get("/",authenticate,this.getAllEmployees);
         this.router.get("/:id",this.getEmployeesById);
-        this.router.post("/",this.createEmployee);
+        this.router.post("/",authenticate,authorize,this.createEmployee);
         this.router.put("/:id",this.updateEmployee);
         this.router.delete("/:id",this.deleteEmployee);
+        this.router.post("/login",this.loginEmployee);
     }
 
     getAllEmployees= async(req: express.Request,res: express.Response,next:NextFunction) => {
@@ -57,11 +61,11 @@ class EmployeeController{
         if(errors.length>0)
         {
             console.log(errors);
-            throw new ValidationException(404,"Validation Error",errors);
+            throw new ValidationException(400,"Validation Error",errors);
         }
 
 
-        const savedEmployee=await this.employeeService.createAnEmployee(req.body.name,req.body.email,req.body.address);
+        const savedEmployee=await this.employeeService.createAnEmployee(createEmployeeDto);
         res.status(201).send(savedEmployee);
         }
         catch(err)
@@ -73,8 +77,8 @@ class EmployeeController{
     updateEmployee=async(req:express.Request,res:express.Response,next:NextFunction) => {
 
         try{
-            const createEmployeeDto=plainToInstance(CreateEmployeeDto,req.body);
-            const errors=await validate(createEmployeeDto);
+            const updateEmployeeDto=plainToInstance(UpdateEmployeeDto,req.body);
+            const errors=await validate(updateEmployeeDto);
 
             if(errors.length>0)
             {
@@ -85,7 +89,7 @@ class EmployeeController{
 
             try{
             const employeeId=Number(req.params.id);
-            const employee=await this.employeeService.updateAnEmployee(employeeId,req.body.name,req.body.email,req.body.address);
+            const employee=await this.employeeService.updateAnEmployee(employeeId,updateEmployeeDto);
             res.status(200).send(employee);
             }
             catch(err)
@@ -104,6 +108,19 @@ class EmployeeController{
         const employeeId=Number(req.params.id);
         await this.employeeService.deleteEmployee(employeeId);
         res.status(204).send("deletion successfull");
+        }
+        catch(err)
+        {
+            next(err);
+        }
+    }
+
+    loginEmployee=async(req:Request,res:Response,next:NextFunction)=>
+    {
+        const {email,password}=req.body;
+        try{
+            const token=await this.employeeService.loginEmployee(email,password);
+            res.status(200).send({data:token});
         }
         catch(err)
         {
