@@ -39,7 +39,7 @@ class EmployeeController{
     }
 
     getEmployeesById = async(req:express.Request,res:express.Response,next:NextFunction) => {
-        const employeeId=Number(req.params.id);
+        const employeeId=req.params.id;
 
         try{
         const employee=await this.employeeService.getEmployeeById(employeeId);
@@ -60,7 +60,7 @@ class EmployeeController{
 
         if(errors.length>0)
         {
-            console.log(errors);
+            //console.log(errors);
             throw new ValidationException(400,"Validation Error",errors);
         }
 
@@ -88,7 +88,7 @@ class EmployeeController{
 
 
             try{
-            const employeeId=Number(req.params.id);
+            const employeeId=req.params.id;
             const employee=await this.employeeService.updateAnEmployee(employeeId,updateEmployeeDto);
             res.status(200).send(employee);
             }
@@ -105,7 +105,7 @@ class EmployeeController{
     deleteEmployee=async(req:express.Request,res:express.Response,next:NextFunction) => {
 
         try{
-        const employeeId=Number(req.params.id);
+        const employeeId=req.params.id;
         await this.employeeService.deleteEmployee(employeeId);
         res.status(204).send("deletion successfull");
         }
@@ -117,9 +117,9 @@ class EmployeeController{
 
     loginEmployee=async(req:Request,res:Response,next:NextFunction)=>
     {
-        const {email,password}=req.body;
+        const {username,password}=req.body;
         try{
-            const token=await this.employeeService.loginEmployee(email,password);
+            const token=await this.employeeService.loginEmployee(username,password);
             res.status(200).send({data:token});
         }
         catch(err)

@@ -9,7 +9,7 @@ const authorize=async(req:RequestWithUser,res:Response,next:NextFunction)=>
 {
     try{
         const role=req.role;
-        if(role!==Role.HR)
+        if(role!==Role.ADMIN)
         {
             throw new HttpException(403,'Forbidden access');
         }

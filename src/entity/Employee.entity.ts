@@ -11,10 +11,16 @@ class Employee extends AbstractEntity{
     name:string;
 
     @Column()
-    email:string;
+    username:string;
 
-    @Column({nullable:true})
-    age:number;
+    @Column()
+    joiningDate:string;
+
+    @Column()
+    isActive:boolean;
+
+    @Column()
+    experience:number;
 
     @OneToOne(() => Address,(address) => address.employee,{cascade:true})
     address:Address;
@@ -22,7 +28,7 @@ class Employee extends AbstractEntity{
     @Column()
     password:string
 
-    @Column({default:Role.DEVELOPER})
+    @Column({})
     role:Role
 }
 

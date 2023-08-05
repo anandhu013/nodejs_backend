@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
 import Address from "../entity/address.entity";
 import { Type } from "class-transformer";
 import UpdateAddressDto from "./update-address.dto";
@@ -9,13 +9,21 @@ class UpdateEmployeeDto{
     name:string;
 
     @IsNotEmpty()
-    @IsEmail()
-    email:string;
+    @IsString()
+    username:string;
 
     @IsNotEmpty()
     @ValidateNested({each:true})
     @Type(()=> UpdateAddressDto)
     address:Address
+
+    @IsNotEmpty()
+    @IsString()
+    joiningDate:string
+
+    @IsNotEmpty()
+    @IsNumber()
+    experience:number
 }
 
 export default UpdateEmployeeDto;

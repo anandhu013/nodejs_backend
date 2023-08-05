@@ -7,10 +7,10 @@ const authenticate= async(req:RequestWithUser,res:Response,next:NextFunction) =>
 {
     try{
         const token=getTokenFromRequestHeader(req);
-        const payload:jwtPayload=jsonwebtoken.verify(token,process.env.JWT_TOKEN) as jwtPayload;
+        const payload:jwtPayload=jsonwebtoken.verify(token,"ABCDE") as jwtPayload;
 
         req.name=payload.name;
-        req.email=payload.email;
+        req.username=payload.username;
         req.role=payload.role;
         next();
         

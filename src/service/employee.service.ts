@@ -26,7 +26,7 @@ class EmployeeService{
         return employees;
     }
 
-    async getEmployeeById(id:number):Promise<Employee|null>
+    async getEmployeeById(id:string):Promise<Employee|null>
     {
         const employee= await this.employeeRepository.findAnEmployeeById(id);
         if(!employee)
@@ -40,13 +40,20 @@ class EmployeeService{
     async createAnEmployee(createEmployeeDto:CreateEmployeeDto):Promise<Employee>
     {
         const newEmployee = new Employee();
-        newEmployee.email = createEmployeeDto.email;
+        newEmployee.username = createEmployeeDto.username;
         newEmployee.name = createEmployeeDto.name;
         newEmployee.role=createEmployeeDto.role;
         newEmployee.password=await bcrypt.hash(createEmployeeDto.password,10);
+        newEmployee.experience=createEmployeeDto.experience;
+        newEmployee.isActive=true;
+        newEmployee.joiningDate=createEmployeeDto.joiningDate;
 
         const newAddress=new Address();
-        newAddress.line1=createEmployeeDto.address.line1;
+        newAddress.addressLine1=createEmployeeDto.address.addressLine1;
+        newAddress.addressLine2=createEmployeeDto.address.addressLine2;
+        newAddress.city=createEmployeeDto.address.city;
+        newAddress.state=createEmployeeDto.address.state;
+        newAddress.country=createEmployeeDto.address.country;
         newAddress.pincode=createEmployeeDto.address.pincode;
 
         newEmployee.address=newAddress;
@@ -55,7 +62,7 @@ class EmployeeService{
         return this.employeeRepository.createAnEmployee(newEmployee);
     }
 
-    async updateAnEmployee(id:number,updateEmployeeDto:UpdateEmployeeDto):Promise<Employee>
+    async updateAnEmployee(id:string,updateEmployeeDto:UpdateEmployeeDto):Promise<Employee>
     {
         const employee=await this.employeeRepository.findAnEmployeeById(id);
 
@@ -65,14 +72,22 @@ class EmployeeService{
         }
 
         employee.name=updateEmployeeDto.name;
-        employee.email=updateEmployeeDto.email;
-        employee.address.line1=updateEmployeeDto.address.line1;
+        employee.username=updateEmployeeDto.username;
+        employee.joiningDate=updateEmployeeDto.joiningDate;
+        employee.experience=updateEmployeeDto.experience;
+
+
+        employee.address.addressLine1=updateEmployeeDto.address.addressLine1;
+        employee.address.addressLine2=updateEmployeeDto.address.addressLine2;
         employee.address.pincode=updateEmployeeDto.address.pincode;
-        employee.updatedAt=new Date();
+        employee.address.city=updateEmployeeDto.address.city;
+        employee.address.state=updateEmployeeDto.address.state;
+        employee.address.country=updateEmployeeDto.address.country;
+
         return this.employeeRepository.updateAnEmployee(employee);
     }
 
-    async deleteEmployee(id:number):Promise<Employee>
+    async deleteEmployee(id:string):Promise<Employee>
     {
         const employee=await this.employeeRepository.findAnEmployeeById(id);
 
@@ -83,11 +98,11 @@ class EmployeeService{
         return this.employeeRepository.deleteEmployee(employee);
     }
 
-    loginEmployee = async(email:string,password:string) =>{
-        const employee=await this.employeeRepository.findAnEmployeeByEmail(email);
+    loginEmployee = async(username:string,password:string) =>{
+        const employee=await this.employeeRepository.findAnEmployeeByUsername(username);
         if(!employee)
         {
-            throw new HttpException(401,`Not found employee with ${email}`);
+            throw new HttpException(401,`Not found employee with ${username}`);
         }
 
         const result=await bcrypt.compare(password,employee.password);
@@ -99,11 +114,11 @@ class EmployeeService{
 
         const payload ={
             name:employee.name,
-            email:employee.email,
+            email:employee.username,
             role:employee.role
         }
 
-        const token=jsonwebtoken.sign(payload,process.env.JWT_TOKEN,{
+        const token=jsonwebtoken.sign(payload,"ABCDE",{
             expiresIn:"1h"
         });
 

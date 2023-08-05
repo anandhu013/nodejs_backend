@@ -18,7 +18,7 @@ class EmployeeRepository{
     }
 
 
-    findAnEmployeeById(id:number):Promise<Employee>{
+    findAnEmployeeById(id:string):Promise<Employee>{
         //const employeeRepository= this.dataSource.getRepository(Employee);
         return this.employeeRepository.findOne({
             where:{id:id},
@@ -28,10 +28,10 @@ class EmployeeRepository{
         });
     }
 
-    findAnEmployeeByEmail(email:string):Promise<Employee>{
+    findAnEmployeeByUsername(username:string):Promise<Employee>{
         //const employeeRepository= this.dataSource.getRepository(Employee);
         return this.employeeRepository.findOne({
-            where:{email:email},
+            where:{username:username},
             relations:{
                 address:true,
             },
