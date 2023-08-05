@@ -47,6 +47,7 @@ class EmployeeService{
         newEmployee.experience=createEmployeeDto.experience;
         newEmployee.isActive=true;
         newEmployee.joiningDate=createEmployeeDto.joiningDate;
+        newEmployee.department=createEmployeeDto.departmentId;
 
         const newAddress=new Address();
         newAddress.addressLine1=createEmployeeDto.address.addressLine1;
@@ -75,6 +76,7 @@ class EmployeeService{
         employee.username=updateEmployeeDto.username;
         employee.joiningDate=updateEmployeeDto.joiningDate;
         employee.experience=updateEmployeeDto.experience;
+        employee.department=updateEmployeeDto.departmentId;
 
 
         employee.address.addressLine1=updateEmployeeDto.address.addressLine1;

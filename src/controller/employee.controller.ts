@@ -8,6 +8,7 @@ import ValidationException from "../exception/validation.exception";
 import UpdateEmployeeDto from "../dto/update-employee.dto";
 import authenticate from "../middleware/authenticate.middleware";
 import authorize from "../middleware/authorize.middleware";
+import { Role } from "../utils/role.enum";
 
 class EmployeeController{
     public router:express.Router;
@@ -19,10 +20,10 @@ class EmployeeController{
         //this.employeeService=new EmployeeService();
 
         this.router.get("/",authenticate,this.getAllEmployees);
-        this.router.get("/:id",this.getEmployeesById);
-        this.router.post("/",authenticate,authorize,this.createEmployee);
-        this.router.put("/:id",this.updateEmployee);
-        this.router.delete("/:id",this.deleteEmployee);
+        this.router.get("/:id",authenticate,this.getEmployeesById);
+        this.router.post("/",authenticate,authorize(Role.ADMIN),this.createEmployee);
+        this.router.put("/:id",authenticate,authorize(Role.ADMIN),this.updateEmployee);
+        this.router.delete("/:id",authenticate,authorize(Role.ADMIN),this.deleteEmployee);
         this.router.post("/login",this.loginEmployee);
     }
 

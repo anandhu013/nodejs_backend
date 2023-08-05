@@ -12,7 +12,7 @@ class EmployeeRepository{
         //const employeeRepository= this.dataSource.getRepository(Employee);
         return this.employeeRepository.find({
             relations:{
-                address:true
+                address:true,
             }
         });
     }
@@ -23,7 +23,7 @@ class EmployeeRepository{
         return this.employeeRepository.findOne({
             where:{id:id},
             relations:{
-                address:true,
+                address:true
             },
         });
     }

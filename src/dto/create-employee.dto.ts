@@ -33,6 +33,12 @@ class CreateEmployeeDto{
     @IsNotEmpty()
     @IsNumber()
     experience:number
+
+    @IsNotEmpty()
+    @IsNumber()
+    departmentId:number
+
+    
 }
 
 export default CreateEmployeeDto;

@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 import Address from "./address.entity";
 import AbstractEntity from "./abstract-entity";
 import { Role } from "../utils/role.enum";
+import Department from "./department-entity";
 
 
 @Entity("employees")
@@ -30,6 +31,9 @@ class Employee extends AbstractEntity{
 
     @Column({})
     role:Role
+
+    @ManyToOne((type) => Department, (department) => department.employees,{cascade:true})
+    department:number;
 }
 
 export default Employee;

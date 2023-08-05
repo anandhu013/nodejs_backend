@@ -7,12 +7,16 @@ import "reflect-metadata";
 import dataSource from "./db/postgres.db";
 import employeeRoute from "./route/employee.route";
 import errorMiddleware from "./middleware/error.middleware";
+import departmentRoute from "./route/department.route";
+import rolesRouter from "./route/roles.route";
 
 const server=express();
 
 server.use(express.json());
 server.use(loggerMiddleware);
 server.use('/employees',employeeRoute);
+server.use('/department',departmentRoute);
+server.use('/roles',rolesRouter);
 
 
 
