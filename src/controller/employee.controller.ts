@@ -9,6 +9,7 @@ import UpdateEmployeeDto from "../dto/update-employee.dto";
 import authenticate from "../middleware/authenticate.middleware";
 import authorize from "../middleware/authorize.middleware";
 import { Role } from "../utils/role.enum";
+import PatchEmployeeDto from "../dto/patch-employee.dto";
 
 class EmployeeController{
     public router:express.Router;
@@ -25,6 +26,7 @@ class EmployeeController{
         this.router.put("/:id",authenticate,authorize(Role.ADMIN),this.updateEmployee);
         this.router.delete("/:id",authenticate,authorize(Role.ADMIN),this.deleteEmployee);
         this.router.post("/login",this.loginEmployee);
+        this.router.patch("/:id",authenticate,authorize(Role.ADMIN),this.patchEmployee);
     }
 
     getAllEmployees= async(req: express.Request,res: express.Response,next:NextFunction) => {
@@ -102,6 +104,36 @@ class EmployeeController{
             next(err);
         }
     }
+
+
+    patchEmployee=async(req:express.Request,res:express.Response,next:NextFunction) => {
+
+        try{
+            const patchEmployeeDto=plainToInstance(PatchEmployeeDto,req.body);
+            const errors=await validate(patchEmployeeDto);
+
+            if(errors.length>0)
+            {
+                console.log(errors);
+                throw new ValidationException(404,"Validation Error",errors);
+            }
+
+
+            try{
+            const employeeId=req.params.id;
+            const employee=await this.employeeService.patchAnEmployee(employeeId,patchEmployeeDto);
+            res.status(200).send(employee);
+            }
+            catch(err)
+            {
+                next(err);
+            }
+        }catch(err)
+        {
+            next(err);
+        }
+    }
+
 
     deleteEmployee=async(req:express.Request,res:express.Response,next:NextFunction) => {
 

@@ -1,4 +1,5 @@
 import CreateEmployeeDto from "../dto/create-employee.dto";
+import PatchEmployeeDto from "../dto/patch-employee.dto";
 import UpdateEmployeeDto from "../dto/update-employee.dto";
 import Employee from "../entity/Employee.entity";
 import Address from "../entity/address.entity";
@@ -88,6 +89,35 @@ class EmployeeService{
 
         return this.employeeRepository.updateAnEmployee(employee);
     }
+
+
+    async patchAnEmployee(id:string,patchEmployeeDto:PatchEmployeeDto):Promise<Employee>
+    {
+        const employee=await this.employeeRepository.findAnEmployeeById(id);
+
+        if(!employee)
+        {
+            throw new HttpException(404,`Employee not found with ${id}`);
+        }
+
+        for(let key in patchEmployeeDto)
+        {
+            if(key!=="address")
+                employee[key]=patchEmployeeDto[key];
+            else
+                {
+                    for (let key1 in patchEmployeeDto["address"])
+                    {
+                        employee["address"][key1]=patchEmployeeDto["address"][key1];
+                    } 
+                }
+        }
+
+        
+
+        return this.employeeRepository.updateAnEmployee(employee);
+    }
+
 
     async deleteEmployee(id:string):Promise<Employee>
     {
