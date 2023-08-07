@@ -13,6 +13,7 @@ import CreateDepartmentDto from "../dto/create-department.dto";
 import UpdateDepartmentDto from "../dto/update-department.dto";
 import createResponse from "../utils/createresponse.format";
 import { Role } from "../utils/role.enum";
+import logger from "../utils/winston";
 
 class DepartmentController{
     public router:express.Router;
@@ -36,6 +37,7 @@ class DepartmentController{
         try{
         const departments=await this.departmentService.getAllDepartments();
         res.status(200).send(createResponse(departments,null,"OK"));
+        logger.info(`Status : 200 \n ${departments}`);
         }
         catch(err)
         {
@@ -49,6 +51,7 @@ class DepartmentController{
         try{
         const department=await this.departmentService.getDepartmentById(departmentId);
         res.status(200).send(createResponse(department,null,"OK"));
+        logger.info(`Status : 200 \n ${department}`);
         }
         catch(err)
         {
@@ -72,6 +75,7 @@ class DepartmentController{
 
         const savedDepartment=await this.departmentService.createDepartment(createDepartmentDto);
         res.status(201).send(createResponse(savedDepartment,null,"Created"));
+        logger.info(`Status : 201 \n ${savedDepartment}`);
         }
         catch(err)
         {
@@ -96,6 +100,7 @@ class DepartmentController{
             const departmentId=Number(req.params.id);
             const department=await this.departmentService.updateDepartment(departmentId,updateDepartmentDto);
             res.status(200).send(createResponse(department,null,"OK"));
+            logger.info(`Status : 200 \n ${department}`);
             }
             catch(err)
             {
@@ -113,6 +118,7 @@ class DepartmentController{
         const departmentId=Number(req.params.id);
         await this.departmentService.deleteDepartment(departmentId);
         res.status(204).send(createResponse({},null,"NoContent"));
+        logger.info(`Status : 204 \n Deleted successfully`);
         }
         catch(err)
         {
