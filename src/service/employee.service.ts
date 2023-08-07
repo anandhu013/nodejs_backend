@@ -1,12 +1,17 @@
+import * as dotenv from "dotenv";
+dotenv.config({path:__dirname+'/../.env'});
 import CreateEmployeeDto from "../dto/create-employee.dto";
 import PatchEmployeeDto from "../dto/patch-employee.dto";
 import UpdateEmployeeDto from "../dto/update-employee.dto";
 import Employee from "../entity/Employee.entity";
 import Address from "../entity/address.entity";
 import HttpException from "../exception/http.exception";
+import DepartmentRepository from "../repository/department.repository";
 import EmployeeRepository from "../repository/employee.repository";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken"
+
+
 
 class EmployeeService{
 
@@ -48,7 +53,7 @@ class EmployeeService{
         newEmployee.experience=createEmployeeDto.experience;
         newEmployee.isActive=true;
         newEmployee.joiningDate=createEmployeeDto.joiningDate;
-        newEmployee.department=createEmployeeDto.departmentId;
+        newEmployee.departmentId=createEmployeeDto.departmentId;
 
         const newAddress=new Address();
         newAddress.addressLine1=createEmployeeDto.address.addressLine1;
@@ -77,7 +82,7 @@ class EmployeeService{
         employee.username=updateEmployeeDto.username;
         employee.joiningDate=updateEmployeeDto.joiningDate;
         employee.experience=updateEmployeeDto.experience;
-        employee.department=updateEmployeeDto.departmentId;
+        employee.departmentId=updateEmployeeDto.departmentId;
 
 
         employee.address.addressLine1=updateEmployeeDto.address.addressLine1;
@@ -150,11 +155,18 @@ class EmployeeService{
             role:employee.role
         }
 
-        const token=jsonwebtoken.sign(payload,"ABCDE",{
+        const token=jsonwebtoken.sign(payload,process.env.JWT_TOKEN,{
             expiresIn:"1h"
         });
 
+
         return {token:token};
+    }
+
+
+    findEmployeeByDepartmentId=async(id:number):Promise<Employee>=>{
+        const employee=await this.employeeRepository.findEmployeeByDepartmentId(id);
+        return employee;
     }
 
 

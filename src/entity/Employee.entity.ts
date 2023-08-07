@@ -33,7 +33,10 @@ class Employee extends AbstractEntity{
     role:Role
 
     @ManyToOne((type) => Department, (department) => department.employees,{cascade:true})
-    department:number;
+    department:Department;
+
+    @Column({nullable:true})
+    departmentId:number;
 }
 
 export default Employee;

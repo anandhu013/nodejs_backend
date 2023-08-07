@@ -10,6 +10,7 @@ import authenticate from "../middleware/authenticate.middleware";
 import authorize from "../middleware/authorize.middleware";
 import { Role } from "../utils/role.enum";
 import PatchEmployeeDto from "../dto/patch-employee.dto";
+import createResponse from "../utils/createresponse.format";
 
 class EmployeeController{
     public router:express.Router;
@@ -33,7 +34,7 @@ class EmployeeController{
 
         try{
         const employees=await this.employeeService.getAllEmployees();
-        res.status(200).send(employees);
+        res.status(200).send(createResponse(employees,null,"OK"));
         }
         catch(err)
         {
@@ -46,7 +47,7 @@ class EmployeeController{
 
         try{
         const employee=await this.employeeService.getEmployeeById(employeeId);
-        res.status(200).send(employee);
+        res.status(200).send(createResponse(employee,null,"OK"));
         }
         catch(err)
         {
@@ -69,7 +70,7 @@ class EmployeeController{
 
 
         const savedEmployee=await this.employeeService.createAnEmployee(createEmployeeDto);
-        res.status(201).send(savedEmployee);
+        res.status(201).send(createResponse(savedEmployee,null,"OK"));
         }
         catch(err)
         {
@@ -93,7 +94,7 @@ class EmployeeController{
             try{
             const employeeId=req.params.id;
             const employee=await this.employeeService.updateAnEmployee(employeeId,updateEmployeeDto);
-            res.status(200).send(employee);
+            res.status(200).send(createResponse(employee,null,"OK"));
             }
             catch(err)
             {
@@ -122,7 +123,7 @@ class EmployeeController{
             try{
             const employeeId=req.params.id;
             const employee=await this.employeeService.patchAnEmployee(employeeId,patchEmployeeDto);
-            res.status(200).send(employee);
+            res.status(200).send(createResponse(employee,null,"OK"));
             }
             catch(err)
             {
@@ -140,7 +141,7 @@ class EmployeeController{
         try{
         const employeeId=req.params.id;
         await this.employeeService.deleteEmployee(employeeId);
-        res.status(204).send("deletion successfull");
+        res.status(204).send(createResponse([],"deletion successfull","No COntent"));
         }
         catch(err)
         {
@@ -153,7 +154,7 @@ class EmployeeController{
         const {username,password}=req.body;
         try{
             const token=await this.employeeService.loginEmployee(username,password);
-            res.status(200).send({data:token});
+            res.status(200).send(createResponse(token,null,"OK"));
         }
         catch(err)
         {

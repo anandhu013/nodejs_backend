@@ -38,6 +38,12 @@ class EmployeeRepository{
         });
     }
 
+    findEmployeeByDepartmentId(id:number):Promise<Employee>{
+        return this.employeeRepository.findOne({
+            where:{departmentId:id}
+        });
+    }
+
 
     createAnEmployee(employee:Employee):Promise<Employee>{
         return this.employeeRepository.save(employee);

@@ -5,7 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 import loggerMiddleware from "./middleware/logger.middleware";
 import "reflect-metadata";
 import dataSource from "./db/postgres.db";
-import employeeRoute from "./route/employee.route";
+import {employeeRoute} from "./route/employee.route";
 import errorMiddleware from "./middleware/error.middleware";
 import departmentRoute from "./route/department.route";
 import rolesRouter from "./route/roles.route";

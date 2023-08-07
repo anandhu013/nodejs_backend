@@ -112,7 +112,7 @@ class DepartmentController{
         try{
         const departmentId=Number(req.params.id);
         await this.departmentService.deleteDepartment(departmentId);
-        res.status(204).send(createResponse(null,null,"NoContent"));
+        res.status(204).send(createResponse({},null,"NoContent"));
         }
         catch(err)
         {
